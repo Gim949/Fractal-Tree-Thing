@@ -55,6 +55,7 @@ Vector.prototype = {
 var Tree = function (vec1, vec2) {
     this.vec1 = vec1;
     this.vec2 = vec2;
+    this.isDrawn = false;
 
     this.draw = function (ctx) {
         ctx.fillStyle = 'black';
@@ -66,16 +67,16 @@ var Tree = function (vec1, vec2) {
 
     this.getLeftBranch = function () {
         var modifiedVec = this.vec1.copy().sub(this.vec2),
-        rightBranch = modifiedVec.copy().rotate(180 + 30);
+            branch = modifiedVec.copy().rotate(180 + 25);
 
-        return new Tree(vec2, vec2.copy().add(rightBranch));
+        return new Tree(vec2, vec2.copy().add(branch.div(new Vector(1.6, 1.4))));
     }
 
     this.getRightBranch = function () {
         var modifiedVec = this.vec1.copy().sub(this.vec2),
-            rightBranch = modifiedVec.copy().rotate(180 - 30);
+            branch = modifiedVec.copy().rotate(180 - 25);
 
-        return new Tree(vec2, vec2.copy().add(rightBranch));
+        return new Tree(vec2, vec2.copy().add(branch.div(new Vector(1.6, 1.4))));;
     }
 };
 
@@ -106,8 +107,12 @@ function onMouseClick() {
     //}
     for (var i = branches.length - 1; i >= 0; i--)
     {
-        branches.push(myTree.getLeftBranch());
-        branches.push(myTree.getRightBranch());
+        if (!branches[i].isDrawn)
+        {
+            branches.push(branches[i].getLeftBranch());
+            branches.push(branches[i].getRightBranch());
+            branches[i].isDrawn = true;
+        }
     }
 
     console.log(branches);
