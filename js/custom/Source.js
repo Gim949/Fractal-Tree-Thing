@@ -10,22 +10,40 @@ Vector.prototype = {
 
     //Adds vectors
     add: function (vector) {
-        return new Vector(this.x + vector.x, this.y + vector.y);
+        this.x += vector.x;
+        this.y += vector.y;
+        return this;
     },
 
     //Subtracts vectors (ordering does matter)
     sub: function (vector) {
-        return new Vector(this.x - vector.x, this.y - vector.y);
+        this.x -= vector.x;
+        this.y -= vector.y;
+        return this;
     },
 
     //Multiplication
     mul: function (vector) {
-        return new Vector(this.x * vector.x, this.y * vector.y);
+        this.x *= vector.x;
+        this.y *= vector.y;
+        return this;
     },
 
     //Division
     div: function (vector) {
-        return new Vector(this.x / vector.x, this.y / vector.y);
+        this.x /= vector.x;
+        this.y /= vector.y;
+        return this;
+    },
+
+    rotate: function (vector) {
+        var nx = this.x * Math.cos(angle) - this.y * Math.sin(angle);
+        var ny = this.x * Math.sin(angle) + this.y * Math.cos(angle);
+
+        this.x = nx;
+        this.y = ny;
+
+        return this;
     }
 };
 
@@ -54,8 +72,8 @@ var Tree = function (vec1, vec2) {
 var canvas = document.getElementById("container"),
     ctx = canvas.getContext("2d");
 
-var myTree;
-var branches = [];
+var myTree,
+    branches = [];
 
 function init() {
     myTree = new Tree(new Vector(canvas.width / 2, canvas.height), new Vector(canvas.width / 2, canvas.height - 100));
@@ -68,9 +86,7 @@ function update() {
     if (branches.length > 0) branches.forEach(function (i) { i.draw(ctx); });
 }
 
-function onKeyPress(e) {
-    
-}
+function onKeyPress(e) {}
 
 function onMouseClick() {
     //var tempArr = myTree.getNewBranches();
