@@ -36,14 +36,19 @@ Vector.prototype = {
         return this;
     },
 
-    rotate: function (vector) {
-        var nx = this.x * Math.cos(angle) - this.y * Math.sin(angle);
-        var ny = this.x * Math.sin(angle) + this.y * Math.cos(angle);
+    rotate: function (angle) {
+        var nx = this.x * Math.cos(angle * (Math.PI / 180)) - this.y * Math.sin(angle * (Math.PI / 180));
+        var ny = this.x * Math.sin(angle * (Math.PI / 180)) + this.y * Math.cos(angle * (Math.PI / 180));
 
         this.x = nx;
         this.y = ny;
 
         return this;
+    },
+
+    //Returns a copy of the current vector
+    copy: function () {
+        return new Vector(this.x, this.y);
     }
 };
 
@@ -59,13 +64,18 @@ var Tree = function (vec1, vec2) {
         ctx.stroke();
     }
 
-    this.getNewBranches = function () {
-        var temp = [];
-        rightBranch = new Vector(vec2.x + Math.sqrt(3) + Math.sqrt(Math.pow(Math.abs(vec2.x - vec1.x), 2) + Math.pow(Math.abs(vec2.y - vec1.y), 2)) / 1.5, vec2.y - Math.sqrt(Math.pow(Math.abs(vec2.x - vec1.x), 2) + Math.pow(Math.abs(vec2.y - vec1.y), 2)) / 1.5); //30 deg rotation
-        leftBranch = new Vector(vec2.x - Math.sqrt(3) - Math.sqrt(Math.pow(Math.abs(vec2.x - vec1.x), 2) + Math.pow(Math.abs(vec2.y - vec1.y), 2)) / 1.5, vec2.y - Math.sqrt(Math.pow(Math.abs(vec2.x - vec1.x), 2) + Math.pow(Math.abs(vec2.y - vec1.y), 2)) / 1.5); //-30 deg rotation
+    this.getLeftBranch = function () {
+        var modifiedVec = this.vec1.copy().sub(this.vec2),
+        rightBranch = modifiedVec.copy().rotate(180 + 30);
 
-        temp.push(leftBranch, rightBranch);
-        return temp;
+        return new Tree(vec2, vec2.copy().add(rightBranch));
+    }
+
+    this.getRightBranch = function () {
+        var modifiedVec = this.vec1.copy().sub(this.vec2),
+            rightBranch = modifiedVec.copy().rotate(180 - 30);
+
+        return new Tree(vec2, vec2.copy().add(rightBranch));
     }
 };
 
@@ -95,10 +105,10 @@ function onMouseClick() {
     //    branches.push(tempTree);
     //}
     for (var i = branches.length - 1; i >= 0; i--)
-        branches[i].getNewBranches().forEach(function (item) {
-            console.log(branches);
-            branches.push(new Tree(branches[i].vec2, item));
-        });
+    {
+        branches.push(myTree.getLeftBranch());
+        branches.push(myTree.getRightBranch());
+    }
 
     console.log(branches);
 }
