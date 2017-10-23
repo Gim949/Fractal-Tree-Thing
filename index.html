@@ -1,0 +1,66 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Hello World</title>
+    <script src="js/perlin.js"></script>
+</head>
+<body style="margin:0">
+    <!--
+    <h1>Hello Noise</h1>
+    <canvas id="container" style="margin:auto; position:relative;"></canvas>
+    <script>
+        var canvas = document.getElementById("container");
+        canvas.width = 640;
+        canvas.height = 360;
+        var ctx = canvas.getContext("2d");
+        
+        noise.seed(Math.random());
+
+        function drawNoiseMap() {
+            for (var x = 0; x < canvas.width / 2; x++)
+                for (var y = 0; y < canvas.height / 2; y++) {
+                    var value = Math.abs(noise.perlin2(x / 20, y / 20));
+                    value *= 256
+                    value = Math.floor(value);
+                    console.log(value);
+                    ctx.fillStyle = 'rgb(' + value + ', ' + value + ', ' + value + ')';
+                    ctx.fillRect(x * 2, y * 2, 2, 2);
+                }
+        }
+
+        function drawGraph() {
+            ctx.fillStyle = "black";
+            ctx.fillRect(0, canvas.height / 2, canvas.width, 1);
+            var i = Date.now(),
+                end = 1;
+
+            for (var x = 0; x < canvas.width / 3; x++)
+                for (var y = 0; y < canvas.height / 3; y++) {
+                    i = Date.now();
+                    var value = noise.perlin3(x / 100, y / 100, end);
+                    console.log(value);
+                    ctx.fillStyle = 'navy';
+                    ctx.fillRect(x * 3, canvas.height / 2 + y * 3 * value, 2, 2);
+                    end = i - Date.now();
+                }
+        }
+
+        //drawNoiseMap();
+        //drawGraph();
+    </script>
+    -->
+
+    <canvas id="container" style="border: 1px solid black;"></canvas>
+    <script src="js/custom/Source.js"></script>
+    <script>
+        document.addEventListener("keypress", (e) => {
+            onKeyPress(e);
+        });
+        document.addEventListener("click", (e) => {
+            onMouseClick(e);
+        });
+    </script>
+
+</body>
+</html>
