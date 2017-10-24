@@ -52,15 +52,27 @@ Vector.prototype = {
     }
 };
 
+//An octave perlin noise function (octave, frequency, amplitude)
+function PerlinOctave(x, y, oct, freq, amp) {
+    var gain = 1,
+        val = 0;
+    for (var i = 0; i < oct; i++) {
+        val += noise.perlin2(x * gain / freq, y * gain / freq) * (amp / gain);
+        gain *= 2;
+    }
+
+    return val;
+}
+
 var Tree = function (vec1, vec2) {
     this.vec1 = vec1;
     this.vec2 = vec2;
     this.isDrawn = false;
+    this.arrForSway = [],
+        tempCounter = 0;
 
-    this.jitter = function () {
-        this.vec1.x += 2 * Math.random() - 1;
-        this.vec1.y += 2 * Math.random() - 1;
-    };
+    for (var y = 0; y < canvas.height; y++) 
+        this.arrForSway.push(PerlinOctave(this.vec2.x, this.vec2.y, 4, 2, 5));
 
     this.draw = function (ctx) {
         ctx.fillStyle = 'black';
@@ -68,6 +80,10 @@ var Tree = function (vec1, vec2) {
         ctx.moveTo(vec1.x, vec1.y);
         ctx.lineTo(vec2.x, vec2.y);
         ctx.stroke();
+    };
+
+    this.sway = function () {
+        //this.vec2.x +=     
     };
 
     this.getLeftBranch = function () {
@@ -81,7 +97,7 @@ var Tree = function (vec1, vec2) {
         var modifiedVec = this.vec1.copy().sub(this.vec2),
             branch = modifiedVec.copy().rotate(180 - 25);
 
-        return new Tree(vec2, vec2.copy().add(branch.div(new Vector(1.6, 1.4))));;
+        return new Tree(vec2, vec2.copy().add(branch.div(new Vector(1.6, 1.4))));
     };
 };
 
@@ -93,6 +109,7 @@ var myTree,
     updateCounter;
 
 function init() {
+    noise.seed(Math.random());
     myTree = new Tree(new Vector(canvas.width / 2, canvas.height - 100), new Vector(canvas.width / 2, canvas.height - 200));
     branches.push(myTree);
     this.updateCounter = 0;
@@ -111,10 +128,7 @@ function update() {
 
     if (branches.length > 0) branches.forEach(function (i) {
         i.draw(ctx);
-    });
-
-    if (branches.length > 0) branches.forEach(function (i) {
-        i.jitter();
+        i.sway();
     });
 
     updateCounter++;
