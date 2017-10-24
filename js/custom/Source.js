@@ -67,12 +67,10 @@ function PerlinOctave(x, y, oct, freq, amp) {
 var Tree = function (vec1, vec2) {
     this.vec1 = vec1;
     this.vec2 = vec2;
+    this.idealVec = vec2.copy();
     this.isDrawn = false;
-    this.arrForSway = [],
-        tempCounter = 0;
 
-    for (var y = 0; y < canvas.height; y++) 
-        this.arrForSway.push(PerlinOctave(this.vec2.x, this.vec2.y, 4, 2, 5));
+    console.log(this);
 
     this.draw = function (ctx) {
         ctx.fillStyle = 'black';
@@ -83,7 +81,7 @@ var Tree = function (vec1, vec2) {
     };
 
     this.sway = function () {
-        //this.vec2.x +=     
+        this.vec2.x = this.idealVec.x + PerlinOctave(Date.now(), Date.now(), 8, 500, 15);
     };
 
     this.getLeftBranch = function () {
